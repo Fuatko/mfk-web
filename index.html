@@ -156,6 +156,13 @@ section{padding:84px 0}
 /* ---------- Contact ---------- */
 .contact{background:var(--bg);border-top:1px solid var(--line)}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.contact-layout{display:grid;grid-template-columns:1.55fr .75fr;gap:22px;align-items:stretch}
+.contact-cards{display:grid;gap:22px;align-content:start}
+.contact-photo{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);min-height:460px;background:#fff}
+.contact-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
+.contact-photo figcaption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(13,33,64,0) 0%,rgba(13,33,64,.82) 55%);color:#fff;padding:38px 18px 16px;text-align:center}
+.contact-photo figcaption strong{display:block;font-size:1rem;font-weight:700}
+.contact-photo figcaption span{font-size:.82rem;color:#D5E0EE}
 .contact-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}
 .contact-card h3{font-size:1.08rem;margin-bottom:18px}
 .contact-line{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink);font-size:.95rem;min-width:0}
@@ -180,6 +187,8 @@ footer{background:var(--navy);padding:24px 0}
   .hero-inner{grid-template-columns:1fr;padding:56px 0 64px}
   .approach-grid{grid-template-columns:repeat(2,1fr)}
   .why-layout{grid-template-columns:1fr}
+  .contact-layout{grid-template-columns:1fr}
+  .contact-photo{min-height:420px;max-width:520px}
   .why-photo img{min-height:280px;height:280px}
   .services-grid{grid-template-columns:repeat(2,1fr)}
   .rail{grid-template-columns:repeat(2,1fr)}
@@ -203,6 +212,8 @@ footer{background:var(--navy);padding:24px 0}
   .dig-img{height:150px}
   .why-photo img{min-height:220px;height:220px}
   .contact-card{padding:24px 18px}
+  .contact-layout{grid-template-columns:1fr}
+  .contact-photo{min-height:400px}
   .foot{flex-direction:column;align-items:flex-start;gap:8px}
 }
 @media (max-width:420px){
@@ -463,7 +474,8 @@ footer{background:var(--navy);padding:24px 0}
       <h2>Kurumunuz için doğru adımı birlikte planlayalım</h2>
       <p>İlk görüşmemiz ücretsizdir. İhtiyacınızı dinler, size özel bir yol haritası öneririz.</p>
     </div>
-    <div class="contact-grid">
+    <div class="contact-layout">
+      <div class="contact-cards">
       <div class="contact-card reveal">
         <h3>Bize Ulaşın</h3>
         <div class="contact-line">
@@ -485,6 +497,14 @@ footer{background:var(--navy);padding:24px 0}
         <a class="btn btn-green" href="mailto:iletisim@mfkdanismanlik.com?subject=Danışmanlık Ön Görüşme Talebi">E-posta Gönderin</a>
         <p style="margin-top:16px;margin-bottom:0;font-size:.82rem">Kişisel verileriniz KVKK kapsamında korunur. Detaylar için <a href="kvkk.html" style="color:var(--green);font-weight:600">KVKK Bilgilendirme</a> sayfamızı inceleyebilirsiniz.</p>
       </div>
+      </div>
+      <figure class="contact-photo reveal">
+        <img src="fuat.jpg" alt="M. Fuat Kocabıçak — mfkdanışmanlık kurucusu">
+        <figcaption>
+          <strong>M. Fuat Kocabıçak</strong>
+          <span>Kurucu &amp; Yönetim Danışmanı</span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
