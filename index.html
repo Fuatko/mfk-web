@@ -26,7 +26,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-size:16px}
+html,body{overflow-x:hidden;max-width:100%}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-size:16px;overflow-wrap:break-word}
 h1,h2,h3{color:var(--navy);line-height:1.25;font-weight:700}
 a{color:inherit}
 .container{max-width:1160px;margin:0 auto;padding:0 24px}
@@ -157,7 +158,8 @@ section{padding:84px 0}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .contact-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}
 .contact-card h3{font-size:1.08rem;margin-bottom:18px}
-.contact-line{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink);font-size:.95rem}
+.contact-line{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink);font-size:.95rem;min-width:0}
+.contact-line span,.contact-line a{overflow-wrap:anywhere;min-width:0}
 .contact-line svg{width:19px;height:19px;stroke:var(--green);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .contact-card p{color:var(--muted);font-size:.93rem;margin-bottom:18px}
 
@@ -184,13 +186,31 @@ footer{background:var(--navy);padding:24px 0}
   .phase::after{display:none}
 }
 @media (max-width:680px){
+  .container{padding:0 18px}
   .nav-links{position:fixed;inset:70px 0 auto 0;background:#fff;flex-direction:column;align-items:flex-start;padding:22px 24px;gap:18px;border-bottom:1px solid var(--line);display:none}
   .nav-links.open{display:flex}
   .menu-toggle{display:block}
   .services-grid,.why-grid,.digital-grid,.contact-grid,.rail,.approach-grid,.growth-grid{grid-template-columns:1fr}
-  .hero-media img{height:260px}
+  .hero-inner{gap:32px;padding:44px 0 52px}
+  .hero-media img{height:240px}
+  .hero-badge{left:12px;bottom:12px;padding:10px 14px}
   .hero-chips{gap:8px}
-  section{padding:60px 0}
+  .chip{padding:7px 13px;font-size:.8rem}
+  .hero-actions .btn{width:100%;text-align:center}
+  section{padding:56px 0}
+  .section-head{margin-bottom:36px}
+  .gr-card img{height:180px}
+  .dig-img{height:150px}
+  .why-photo img{min-height:220px;height:220px}
+  .contact-card{padding:24px 18px}
+  .foot{flex-direction:column;align-items:flex-start;gap:8px}
+}
+@media (max-width:420px){
+  .hero h1{font-size:1.72rem}
+  .section-head h2{font-size:1.38rem}
+  .hero .hero-lead{font-size:1.02rem}
+  .logo img{height:32px}
+  .approach{padding:26px 0}
 }
 </style>
 </head>

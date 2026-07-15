@@ -11,7 +11,8 @@
 <style>
 :root{--bg:#F4F7FB;--white:#FFFFFF;--navy:#1B3A5C;--navy-soft:#2C4F78;--green:#10B981;--green-soft:#E7F7F1;--blue-soft:#EAF1F9;--ink:#22344A;--muted:#5F7189;--line:#E1E9F2;--shadow:0 4px 18px rgba(27,58,92,.06)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px}
+html,body{overflow-x:hidden;max-width:100%}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;overflow-wrap:break-word}
 h2,h3{color:var(--navy);line-height:1.3}
 a{color:var(--green)}
 .container{max-width:860px;margin:0 auto;padding:0 24px}
@@ -35,7 +36,7 @@ footer{background:var(--navy);padding:22px 0}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;color:#B8C8DB;font-size:.84rem}
 .foot a{color:#D7E2EE;text-decoration:none}
 .foot a:hover{color:#fff}
-@media (max-width:680px){.doc{padding:30px 22px}.doc p{text-align:left}}
+@media (max-width:680px){.container{padding:0 16px}.doc{padding:26px 18px}.doc p{text-align:left}.doc h2{font-size:1.25rem}.firm-box{padding:16px}.foot{flex-direction:column;align-items:flex-start;gap:8px}.logo img{height:32px}}
 </style>
 </head>
 <body>
