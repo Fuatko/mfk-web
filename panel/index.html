@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Nabız Takip Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B3A5C;--ink:#0F2438;--green:#10B981;--amber:#E8A33D;--clay:#D4614E;--red:#B84A38;
+  --bg:#F2F6F9;--card:#fff;--line:#DCE6EE;--muted:#5B7189}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Calibri,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.brand{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:700}
+h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:0}
+.btn{background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:11px 18px;border-radius:9px}
+.btn:hover{background:#16324f}
+.btn--line{background:#fff;color:var(--navy);border:1.5px solid var(--line);font-size:13px;padding:9px 14px}
+.btn--line:hover{border-color:var(--navy)}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat dt{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat dd{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;margin-top:3px;letter-spacing:-.02em}
+
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#fff;border:1.5px solid var(--line);color:var(--muted);font-size:13px;font-weight:500;
+  padding:7px 13px;border-radius:100px}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600}
+.chip b{font-family:'IBM Plex Mono',monospace;margin-left:5px;opacity:.75}
+
+.row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  margin-bottom:9px;cursor:pointer;transition:border-color .15s}
+.row:hover{border-color:var(--navy)}
+.row__top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.row__co{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.row__who{font-size:13px;color:var(--muted);margin-top:1px}
+.row__sc{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;text-align:right;line-height:1.1}
+.row__bd{font-size:11px;font-weight:600;text-align:right}
+.row__tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:#F2F6F9;color:var(--muted)}
+.tag--hot{background:#ECFDF5;color:#047857}
+.tag--warn{background:#FDF4E6;color:#8A5D12}
+.tag--st{background:#E9F0F6;color:var(--navy)}
+.row__date{font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:34px 20px;text-align:center;color:var(--muted);font-size:14px}
+
+/* detail */
+.sheet{position:fixed;inset:0;background:rgba(15,36,56,.45);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet__in{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
+  border-radius:16px 16px 0 0;padding:20px 18px 40px}
+@media(min-width:720px){.sheet{align-items:center}.sheet__in{border-radius:16px;max-height:88vh}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:13.5px;border-bottom:1px solid #F0F5F9}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--muted)}
+.kv b{font-weight:600;text-align:right;word-break:break-word}
+.kv a{color:var(--navy)}
+.dim{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dim__n{flex:1;font-size:13px}
+.dim__t{flex:0 0 90px;height:6px;background:#E8EFF5;border-radius:100px;overflow:hidden}
+.dim__f{height:100%;border-radius:100px}
+.dim__v{flex:0 0 30px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600}
+.pipe{display:flex;gap:6px;flex-wrap:wrap}
+.pipe button{font-size:12.5px;font-weight:600;padding:8px 12px;border-radius:8px;
+  background:#F2F6F9;color:var(--muted);border:1.5px solid transparent}
+.pipe button[aria-pressed="true"]{background:var(--navy);color:#fff}
+textarea{width:100%;font-family:inherit;font-size:14px;color:var(--ink);background:#F7FAFC;
+  border:1.5px solid var(--line);border-radius:9px;padding:11px;resize:vertical;min-height:80px;margin-top:8px}
+textarea:focus{border-color:var(--green);background:#fff;outline:none}
+input[type=date]{font-family:inherit;font-size:14px;background:#F7FAFC;border:1.5px solid var(--line);
+  border-radius:9px;padding:10px;margin-top:8px;width:100%}
+.rep{font-size:13.5px;line-height:1.6}
+.rep h4{font-size:13px;color:var(--navy);margin:14px 0 5px}
+.rep ul{margin:6px 0 6px 17px}
+.rep li{margin-bottom:4px}
+.gz{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+@media(max-width:560px){.gz{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+.gz div{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 11px}
+.gz h5{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+.gz li{font-size:12.5px;line-height:1.45;margin-bottom:4px}
+
+/* login */
+.login{max-width:340px;margin:16vh auto;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:26px 22px}
+.login input{width:100%;font-family:inherit;font-size:16px;background:#F7FAFC;border:1.5px solid var(--line);
+  border-radius:9px;padding:13px;margin:14px 0}
+.login input:focus{border-color:var(--green);background:#fff;outline:none}
+.err{color:var(--clay);font-size:13px;margin-top:9px;display:none}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <div class="brand">MFK Danışmanlık</div>
+  <h1 style="margin-top:6px">Takip paneli</h1>
+  <input type="password" id="key" placeholder="Panel anahtarı" autocomplete="current-password">
+  <button class="btn" style="width:100%" id="enter">Giriş</button>
+  <div class="err" id="lerr">Anahtar hatalı.</div>
+</div>
+
+<div class="wrap hidden" id="app">
+  <div class="top">
+    <div>
+      <div class="brand">MFK Danışmanlık</div>
+      <h1>Kurumsal Nabız — takip</h1>
+    </div>
+    <button class="btn--line btn" id="refresh">Yenile</button>
+  </div>
+
+  <dl class="stats" id="stats"></dl>
+
+  <div class="card" id="funnel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="margin:0">Huni · son <span id="fdays">30</span> gün</h3>
+      <div class="filters" style="margin:0">
+        <button class="chip" data-d="7">7g</button>
+        <button class="chip" data-d="30" aria-pressed="true">30g</button>
+        <button class="chip" data-d="90">90g</button>
+      </div>
+    </div>
+    <div id="fsteps"></div>
+    <div id="fdrop"></div>
+    <div id="fsrc"></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">Çerez, IP adresi ve kişisel veri toplanmaz. Oturum etiketi sekme kapandığında silinir.</p>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div id="list"></div>
+</div>
+
+<div class="sheet hidden" id="sheet"><div class="sheet__in" id="sheetin"></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let KEY=sessionStorage.getItem('panelKey')||'';
+let ROWS=[], FILTER='oncelik', CUR=null;
+
+const BANDC=b=>({'Tanımsız':'#B84A38','Kişiye Bağlı':'#D4614E','Tanımlı':'#E8A33D',
+  'Yönetilen':'#10B981','Optimize Edilen':'#1B3A5C'}[b]||'#5B7189');
+const barC=s=>s<21?'#B84A38':s<41?'#D4614E':s<61?'#E8A33D':s<81?'#10B981':'#1B3A5C';
+const STATUS=[['yeni','Yeni'],['arandi','Arandı'],['gorusme','Görüşme'],['kazanildi','Kazanıldı'],['kayip','Kayıp']];
+const stName=v=>(STATUS.find(s=>s[0]===v)||['','—'])[1];
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const dt=s=>s?new Date(s).toLocaleDateString('tr-TR',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+
+async function api(method,body){
+  const r=await fetch('/api/panel',{
+    method, headers:{'Content-Type':'application/json','x-panel-key':KEY},
+    body:body?JSON.stringify(body):undefined
+  });
+  if(r.status===401){ sessionStorage.removeItem('panelKey'); location.reload(); return null; }
+  if(!r.ok) throw new Error('api');
+  return r.json();
+}
+
+$('enter').onclick=async()=>{
+  KEY=$('key').value.trim();
+  if(!KEY) return;
+  try{
+    const d=await api('GET');
+    if(!d) return;
+    sessionStorage.setItem('panelKey',KEY);
+    ROWS=d.rows||[]; boot();
+  }catch(e){ $('lerr').style.display='block'; }
+};
+$('key').addEventListener('keydown',e=>{ if(e.key==='Enter') $('enter').click(); });
+$('refresh').onclick=async()=>{ const d=await api('GET'); if(d){ROWS=d.rows||[];render();} };
+
+function boot(){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); render(); loadFunnel(30); }
+
+let FDAYS=30;
+async function loadFunnel(days){
+  FDAYS=days; $('fdays').textContent=days;
+  let d=null;
+  try{
+    const r=await fetch('/api/panel?view=funnel&days='+days,{headers:{'x-panel-key':KEY}});
+    if(r.ok) d=await r.json();
+  }catch(_){}
+  if(!d||!d.funnel){ $('funnel').style.display='none'; return; }
+  $('funnel').style.display='block';
+
+  const f=d.funnel;
+  const rows=[['Sayfayı görenler',f.goruntuleme],['Değerlendirmeye başlayanlar',f.baslama],
+    ['Form ekranına gelenler',f.form],['Raporu alanlar',f.tamamlama],['Görüşme talep edenler',f.talep]];
+  const top=Number(f.goruntuleme)||0;
+  $('fsteps').innerHTML=rows.map(([k,v],i)=>{
+    const n=Number(v)||0, pct=top?Math.round(n/top*100):0;
+    const prev=i?Number(rows[i-1][1])||0:0;
+    const drop=i&&prev?Math.round((1-n/prev)*100):0;
+    return '<div class="dim" style="margin-bottom:10px">'+
+      '<span class="dim__n">'+k+(i&&drop>0?' <span style="color:#D4614E;font-size:11.5px">−'+drop+'%</span>':'')+'</span>'+
+      '<span class="dim__t" style="flex:0 0 120px"><span class="dim__f" style="display:block;width:'+pct+'%;background:'+
+        (i===4?'#10B981':'#1B3A5C')+'"></span></span>'+
+      '<span class="dim__v" style="flex:0 0 42px">'+n+'</span></div>';
+  }).join('');
+
+  const st=(d.steps||[]).map(s=>Number(s.kalan)||0);
+  if(st.length===10 && st[0]>0){
+    const worst=st.map((v,i)=>({i,d:i?st[i-1]-v:0})).sort((a,b)=>b.d-a.d)[0];
+    $('fdrop').innerHTML='<h3 style="margin:18px 0 8px">Soru bazlı ilerleme</h3>'+
+      '<div style="display:flex;align-items:flex-end;gap:4px;height:70px">'+
+      st.map((v,i)=>'<div title="Soru '+(i+1)+': '+v+'" style="flex:1;background:'+
+        (worst&&worst.i===i&&worst.d>0?'#D4614E':'#1B3A5C')+';opacity:.85;border-radius:3px 3px 0 0;height:'+
+        Math.max(4,Math.round(v/st[0]*100))+'%"></div>').join('')+'</div>'+
+      '<div style="display:flex;gap:4px;margin-top:4px">'+
+      st.map((_,i)=>'<div style="flex:1;text-align:center;font-size:10px;color:var(--muted);font-family:IBM Plex Mono,monospace">'+(i+1)+'</div>').join('')+'</div>'+
+      (worst&&worst.d>0?'<p style="font-size:12.5px;color:var(--muted);margin-top:8px">En büyük kayıp '+
+        (worst.i+1)+'. soruda: '+worst.d+' oturum. Soruyu kısaltmak ya da yerini değiştirmek dönüşümü artırabilir.</p>':'');
+  } else { $('fdrop').innerHTML=''; }
+
+  const src=d.sources||[];
+  $('fsrc').innerHTML=src.length?'<h3 style="margin:18px 0 8px">Kaynaklar</h3>'+
+    src.map(s=>'<div class="kv"><span>'+esc(s.kaynak)+'</span><b>'+s.oturum+'</b></div>').join(''):'';
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#funnel .chip'); if(!b) return;
+  document.querySelectorAll('#funnel .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); loadFunnel(parseInt(b.dataset.d,10));
+});
+
+/* öncelik: görüşme talebi > görünürlük boşluğu > düşük skor */
+function prio(r){
+  if(r.meeting_requested) return 1;
+  if(r.unknown_count>=3) return 2;
+  if(r.total_score<41) return 3;
+  if(r.total_score<61) return 4;
+  return 5;
+}
+const FILTERS=[
+  ['oncelik','Öncelik sırası', r=>r.status==='yeni'],
+  ['talep','Görüşme talebi',   r=>r.meeting_requested],
+  ['gorunurluk','Görünürlük boşluğu', r=>r.unknown_count>=3],
+  ['dusuk','Düşük olgunluk',   r=>r.total_score<41],
+  ['takip','Takipteki',        r=>r.status==='arandi'||r.status==='gorusme'],
+  ['hepsi','Tümü',             ()=>true]
+];
+
+function render(){
+  const week=Date.now()-7*864e5;
+  const talep=ROWS.filter(r=>r.meeting_requested).length;
+  const scored=ROWS.filter(r=>r.total_score!=null);
+  const avg=scored.length?Math.round(scored.reduce((a,r)=>a+r.total_score,0)/scored.length):0;
+  $('stats').innerHTML=
+    stat('Toplam',ROWS.length)+
+    stat('Son 7 gün',ROWS.filter(r=>new Date(r.created_at).getTime()>week).length)+
+    stat('Görüşme talebi',talep,talep?'#10B981':null)+
+    stat('Ortalama skor',avg);
+
+  $('filters').innerHTML=FILTERS.map(([k,label,fn])=>
+    '<button class="chip" data-f="'+k+'" aria-pressed="'+(FILTER===k)+'">'+label+
+    '<b>'+ROWS.filter(fn).length+'</b></button>').join('');
+  $('filters').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{FILTER=c.dataset.f;render();});
+
+  const fn=(FILTERS.find(f=>f[0]===FILTER)||FILTERS[5])[2];
+  let rows=ROWS.filter(fn);
+  if(FILTER==='oncelik') rows.sort((a,b)=>prio(a)-prio(b)||new Date(b.created_at)-new Date(a.created_at));
+
+  $('list').innerHTML = rows.length ? rows.map(card).join('')
+    : '<div class="empty">Bu filtrede kayıt yok.</div>';
+  $('list').querySelectorAll('.row').forEach(el=>el.onclick=()=>open(el.dataset.id));
+}
+function stat(k,v,c){
+  return '<div class="stat"><dt>'+k+'</dt><dd'+(c?' style="color:'+c+'"':'')+'>'+v+'</dd></div>';
+}
+
+function card(r){
+  const tags=[];
+  if(r.meeting_requested) tags.push('<span class="tag tag--hot">Görüşme talep etti</span>');
+  if(r.unknown_count>=3) tags.push('<span class="tag tag--warn">'+r.unknown_count+' bilgi boşluğu</span>');
+  if(r.status!=='yeni') tags.push('<span class="tag tag--st">'+stName(r.status)+'</span>');
+  if(r.sector) tags.push('<span class="tag">'+esc(r.sector)+'</span>');
+  if(r.company_size) tags.push('<span class="tag">'+esc(r.company_size)+' kişi</span>');
+  return '<div class="row" data-id="'+r.id+'">'+
+    '<div class="row__top"><div><div class="row__co">'+esc(r.company)+'</div>'+
+    '<div class="row__who">'+esc(r.name)+(r.job_title?' · '+esc(r.job_title):'')+'</div></div>'+
+    '<div><div class="row__sc" style="color:'+barC(r.total_score)+'">'+(r.total_score??'—')+'</div>'+
+    '<div class="row__bd" style="color:'+BANDC(r.band)+'">'+esc(r.band)+'</div></div></div>'+
+    '<div class="row__tags">'+tags.join('')+
+    '<span class="tag row__date" style="margin-left:auto;background:none">'+dt(r.created_at)+'</span></div></div>';
+}
+
+function open(id){
+  CUR=ROWS.find(r=>r.id===id); if(!CUR) return;
+  const r=CUR;
+  let rep=null; try{ rep=JSON.parse(r.report); }catch(_){}
+  const dims=Array.isArray(r.dim_scores)?r.dim_scores:[];
+
+  const gz=rep&&rep.gzft ? '<div class="card"><h3>GZFT</h3><div class="gz">'+
+    [['guclu','Güçlü','#10B981','#ECFDF5'],['zayif','Zayıf','#D4614E','#FDECE9'],
+     ['firsat','Fırsat','#1B3A5C','#E9F0F6'],['tehdit','Tehdit','#E8A33D','#FDF4E6']]
+    .map(([k,t,c,b])=>{
+      const it=rep.gzft[k]||[]; if(!it.length) return '';
+      return '<div style="border-color:'+c+';background:'+b+'"><h5 style="color:'+c+'">'+t+
+        '</h5><ul style="margin:0;padding-left:15px">'+it.map(i=>'<li>'+esc(i)+'</li>').join('')+'</ul></div>';
+    }).join('')+'</div></div>' : '';
+
+  const plan=rep&&Array.isArray(rep.plan)&&rep.plan.length ? '<div class="card"><h3>İlk 90 gün</h3>'+
+    rep.plan.map((p,i)=>'<div class="kv"><span>'+(i+1)+'. '+esc(p.adim)+'</span><b>'+
+      esc(p.rol)+' · '+esc(p.sure)+'</b></div>').join('')+'</div>' : '';
+
+  $('sheetin').innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
+      '<div><div class="brand">'+dt(r.created_at)+'</div>'+
+      '<h1 style="font-size:20px">'+esc(r.company)+'</h1></div>'+
+      '<button class="btn--line btn" id="close">Kapat</button></div>'+
+
+    '<div class="card"><h3>İletişim</h3>'+
+      kv('Kişi',esc(r.name)+(r.job_title?' — '+esc(r.job_title):''))+
+      kv('E-posta','<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>')+
+      kv('Telefon',r.phone?'<a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a>':'—')+
+      kv('Sektör',esc(r.sector)||'—')+kv('Çalışan',esc(r.company_size)||'—')+
+      (r.preferred_time?kv('Tercih ettiği zaman',esc(r.preferred_time)):'')+
+      (r.message?kv('Notu',esc(r.message)):'')+
+    '</div>'+
+
+    '<div class="card"><h3>Skor · '+(r.total_score??'—')+'/100 · '+esc(r.band)+
+      (r.benchmark_n?' (kıyas: '+esc(r.benchmark_label)+', n='+r.benchmark_n+')':'')+'</h3>'+
+      dims.map(d=>'<div class="dim"><span class="dim__n">'+esc(d.name)+'</span>'+
+        '<span class="dim__t">'+(d.score==null?'':'<span class="dim__f" style="width:'+d.score+'%;background:'+barC(d.score)+';display:block"></span>')+'</span>'+
+        '<span class="dim__v" style="color:'+(d.score==null?'#5B7189':barC(d.score))+'">'+(d.score??'—')+'</span></div>').join('')+
+      (r.unknown_count?'<div class="kv" style="margin-top:8px"><span>Bilgi yok</span><b>'+r.unknown_count+' / 10</b></div>':'')+
+    '</div>'+ gz + plan +
+
+    '<div class="card"><h3>Durum</h3><div class="pipe" id="pipe">'+
+      STATUS.map(([v,l])=>'<button data-s="'+v+'" aria-pressed="'+(r.status===v)+'">'+l+'</button>').join('')+
+    '</div>'+
+    '<label style="font-size:12px;color:var(--muted);display:block;margin-top:14px">Sonraki temas</label>'+
+    '<input type="date" id="nxt" value="'+(r.next_action_at||'')+'">'+
+    '<textarea id="notes" placeholder="Görüşme notu…">'+esc(r.notes)+'</textarea>'+
+    '<button class="btn" style="width:100%;margin-top:10px" id="save">Kaydet</button>'+
+    '<div id="saved" style="text-align:center;font-size:13px;color:var(--green);margin-top:8px;display:none">Kaydedildi</div>'+
+    '</div>'+
+
+    (rep&&rep.rapor?'<div class="card"><h3>Rapor</h3><div class="rep">'+mdh(rep.rapor)+'</div></div>':'');
+
+  $('sheet').classList.remove('hidden');
+  $('close').onclick=()=>$('sheet').classList.add('hidden');
+  $('pipe').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    $('pipe').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+  });
+  $('save').onclick=async()=>{
+    const status=$('pipe').querySelector('[aria-pressed="true"]').dataset.s;
+    const d=await api('PATCH',{id:r.id,status,notes:$('notes').value,
+      next_action_at:$('nxt').value||null, contacted:status!=='yeni'});
+    if(d&&d.row){
+      Object.assign(CUR,d.row);
+      const i=ROWS.findIndex(x=>x.id===r.id); if(i>=0) Object.assign(ROWS[i],d.row);
+      $('saved').style.display='block'; setTimeout(()=>{$('saved').style.display='none';},1600);
+      render();
+    }
+  };
+}
+$('sheet').onclick=e=>{ if(e.target===$('sheet')) $('sheet').classList.add('hidden'); };
+const kv=(k,v)=>'<div class="kv"><span>'+k+'</span><b>'+v+'</b></div>';
+
+function mdh(t){
+  const out=[];let ul=false;
+  esc(t).split('\n').forEach(line=>{
+    const l=line.trim();
+    if(!l){if(ul){out.push('</ul>');ul=false;}return;}
+    if(/^#{1,3}\s/.test(l)){if(ul){out.push('</ul>');ul=false;}out.push('<h4>'+l.replace(/^#+\s/,'')+'</h4>');return;}
+    if(/^[-*]\s/.test(l)){if(!ul){out.push('<ul>');ul=true;}out.push('<li>'+l.slice(2).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</li>');return;}
+    if(ul){out.push('</ul>');ul=false;}
+    out.push('<p>'+l.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</p>');
+  });
+  if(ul)out.push('</ul>');
+  return out.join('');
+}
+
+if(KEY){ api('GET').then(d=>{ if(d){ROWS=d.rows||[];boot();} }).catch(()=>{}); }
+</script>
+</body>
+</html>
