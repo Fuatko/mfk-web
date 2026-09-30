@@ -206,7 +206,8 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
     );
     submissionId = ins.rows[0]?.id || null;
   } catch (e) {
-    console.error('db insert:', e);
+    console.error('[nabiz] db insert error:', e.message, e.code);
+    return res.status(500).json({ error: 'Kayıt oluşturulamadı.' });
   }
 
   // E-posta

@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       ]
     );
   } catch (e) {
-    console.error('track:', e);
+    console.error('[track] db error:', e.message, e.code);
   }
 
   // Ölçüm hiçbir zaman kullanıcıyı bekletmez ya da hata göstermez.
