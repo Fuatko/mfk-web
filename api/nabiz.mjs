@@ -216,7 +216,7 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
   // E-posta
   if (process.env.RESEND_API_KEY && result) {
     try {
-      await fetch('https://api.resend.com/emails', {
+      const rr = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
         body: JSON.stringify({
@@ -227,6 +227,8 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
           html: buildEmail({ name, company, total, band, dims, bench, result })
         })
       });
+      const rrj = await rr.json();
+      console.log('[resend]', rr.status, JSON.stringify(rrj));
     } catch (e) {
       console.error('resend:', e);
     }
