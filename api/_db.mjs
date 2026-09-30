@@ -5,8 +5,9 @@
 import pg from 'pg';
 const { Pool } = pg;
 
-// sslmode=require in the URL conflicts with the ssl object in pg ≥8;
-// strip it so the ssl config below is the sole authority.
+// Strip sslmode from URL — the ssl object below is the sole authority.
+// checkServerIdentity override is required when connecting to a bare IP address
+// because Node.js 24+ still runs hostname validation even with rejectUnauthorized:false.
 const connStr = (process.env.NABIZ_DATABASE_URL || '')
   .replace(/([?&])sslmode=[^&]*/g, '$1')
   .replace(/[?&]$/, '');
@@ -15,7 +16,10 @@ const pool = new Pool({
   connectionString: connStr,
   max: 1,
   idleTimeoutMillis: 10000,
-  ssl: { rejectUnauthorized: false }
+  ssl: {
+    rejectUnauthorized: false,
+    checkServerIdentity: () => undefined   // skip hostname/IP match on self-signed cert
+  }
 });
 
 export function query(text, params) {
