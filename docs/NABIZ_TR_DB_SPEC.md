@@ -58,7 +58,7 @@ Vercel proje ayarlarında Build Command boş, Output Directory kök kalmalı; st
 
 ### 2.2 Ortak bağlantı modülü: `api/_db.mjs`
 Alt çizgiyle başladığı için Vercel bunu ayrı bir uç nokta olarak yayınlamaz.
-- `pg.Pool`, `connectionString: process.env.NABIZ_DATABASE_URL`, `max: 1`, `idleTimeoutMillis: 10000`, SSL açık.
+- `new URL(process.env.NABIZ_DATABASE_URL)` ile bağlantı parametreleri ayrıştırılır; `pg.Pool`'a `host`, `port`, `database`, `user`, `password` ayrı ayrı verilir. `connectionString` yerine bireysel parametre kullanılır (pg'nin `url.parse()` bağımlılığından ve sslmode çakışmasından kaçınmak için). `max: 1`, `idleTimeoutMillis: 10000`, `connectionTimeoutMillis: 8000`, `ssl: { rejectUnauthorized: false }`. Port: **5432** (TLS sertifikalı port; 35342 SSL sunmuyor).
 - Havuz modül düzeyinde bir kez oluşturulur (sıcak başlatmada tekrar kullanılır).
 - Dışa aktarılan tek yardımcı: `query(text, params)`.
 
@@ -83,7 +83,7 @@ Vercel fonksiyonları için `vercel.json` içinde bölge `fra1` (Frankfurt) olar
 ### 2.5 Ortam değişkenleri (Vercel → mfk-web → Production ve Preview)
 | Anahtar | Değer |
 |---|---|
-| `NABIZ_DATABASE_URL` | `postgres://nabiz_app:<parola>@185.149.102.72:35342/mfk_nabiz?sslmode=require` |
+| `NABIZ_DATABASE_URL` | `postgres://nabiz_app:<parola>@185.149.102.72:5432/mfk_nabiz?sslmode=require` |
 | `ANTHROPIC_API_KEY` | Nabız'a özel ayrı anahtar (Claude Code bakiyesinden bağımsız) |
 | `PANEL_KEY` | uzun rastgele dize |
 | `RESEND_API_KEY` | Resend anahtarı (mfkdanismanlik.com alan adı doğrulandıktan sonra) |
