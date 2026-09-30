@@ -22,6 +22,12 @@ const pool = new Pool({
   }
 });
 
-export function query(text, params) {
-  return pool.query(text, params);
+export async function query(text, params) {
+  try {
+    return await pool.query(text, params);
+  } catch (e) {
+    // Log underlying TLS/network error details to help diagnose SSL handshake failures
+    console.error('[db] errno=%s code=%s syscall=%s msg=%s', e.errno, e.code, e.syscall, e.message);
+    throw e;
+  }
 }
