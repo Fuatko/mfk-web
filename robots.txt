@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /panel
+Disallow: /api/
 
 Sitemap: https://www.mfkdanismanlik.com/sitemap.xml
