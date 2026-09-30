@@ -587,7 +587,7 @@ function renderQ(){
 
 function answer(v){
   state.answers[state.i]=v; drawTrace();
-  setTimeout(()=>{ if(state.i<9){state.i++;renderQ();} else show('s-capture'); },170);
+  setTimeout(()=>{ if(state.i<9){state.i++;TRK('step',state.i+1);renderQ();} else{TRK('capture');show('s-capture');} },170);
 }
 $('start').onclick=()=>{ TRK('start'); TRK('step',1); show('s-quiz'); renderQ(); };
 $('back').onclick=()=>{ if(state.i>0){state.i--;renderQ();} };
