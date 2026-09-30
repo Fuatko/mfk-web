@@ -189,8 +189,8 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
         title || null,
         sector || null,
         size || null,
-        answers,
-        JSON.stringify(dims),   // JSONB — ham dizi geçilirse pg PostgreSQL dizi biçimine çevirir, bu hata verir
+        JSON.stringify(answers),  // JSONB — ham JS dizisi pg tarafından PostgreSQL dizi biçimine ({..}) çevrilir, geçersiz JSON
+        JSON.stringify(dims),     // JSONB — aynı nedenle
         dims[0]?.score ?? null,
         dims[1]?.score ?? null,
         dims[2]?.score ?? null,
