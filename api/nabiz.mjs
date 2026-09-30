@@ -39,6 +39,53 @@ async function getBenchmark(sector) {
   return null;
 }
 
+// Beş resmi boyut adından farklı bir ad "<Ad> N puan" kalıbında geçiyorsa yanlış sayar.
+// "İnsan Kaynakları" kontrolü biçimsiz geçişleri de yakalar.
+const RESMI_BOYUTLAR = new Set([
+  'Stratejik Yönetim',
+  'Süreç ve Standartlar',
+  'İnsan ve Performans',
+  'Veri ve Ölçüm',
+  'Yönetişim ve Süreklilik',
+]);
+
+function yanlisBoyutVarMi(metin) {
+  if (metin.includes('İnsan Kaynakları')) return true;
+  const re = /([A-ZÇĞİÖŞÜ][^\d\n]{2,60}?)\s+\d{1,3}\s*puan/g;
+  let m;
+  while ((m = re.exec(metin)) !== null) {
+    if (!RESMI_BOYUTLAR.has(m[1].trim())) return true;
+  }
+  return false;
+}
+
+async function callClaude(promptText) {
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: promptText }]
+      })
+    });
+    if (r.ok) {
+      const data = await r.json();
+      const txt = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('\n');
+      return { raw: txt, out: parseJson(txt) };
+    }
+    console.error('claude status:', r.status, await r.text());
+  } catch (e) {
+    console.error('claude:', e);
+  }
+  return { raw: '', out: null };
+}
+
 function parseJson(text) {
   if (!text) return null;
   const clean = text.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -159,28 +206,19 @@ Hizmet satma, fiyat verme, ısrarcı olma. Sıcak ama ölçülü bir dille yaz. 
 
 Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı övgü yapma, korku pazarlama, klişe kullanma.
 - Uzun tire (—) kullanma; bunun yerine virgül, noktalı virgül veya yeni cümle kur.
-- "çöküş", "felç", "derin kriz", "alarm", "tehlike" gibi abartılı ifadeler yerine ölçülü danışman dili kullan.`;
+- "çöküş", "felç", "derin kriz", "alarm", "tehlike" gibi abartılı ifadeler yerine ölçülü danışman dili kullan.
+- Boyut adlarını yalnızca şu beş ismiyle birebir kullan; başka boyut adı türetme veya birleştirme: Stratejik Yönetim, Süreç ve Standartlar, İnsan ve Performans, Veri ve Ölçüm, Yönetişim ve Süreklilik.`;
 
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 3000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+    ({ raw, out } = await callClaude(prompt));
 
-    if (r.ok) {
-      const data = await r.json();
-      raw = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('\n');
-      out = parseJson(raw);
-    } else {
-      console.error('claude status:', r.status, await r.text());
+    // Yanlış boyut adı kontrolü: bir kez yeniden üret; yine uyuşmazsa olduğu gibi göster.
+    if (out && yanlisBoyutVarMi(raw)) {
+      console.warn('[nabiz] yanlış boyut adı tespit edildi — yeniden üretiliyor');
+      const retry = await callClaude(prompt);
+      if (retry.out && yanlisBoyutVarMi(retry.raw)) {
+        console.warn('[nabiz] yeniden üretimde de yanlış boyut adı var — olduğu gibi gösteriliyor');
+      }
+      if (retry.out) { raw = retry.raw; out = retry.out; }
     }
   } catch (e) {
     console.error('claude:', e);
