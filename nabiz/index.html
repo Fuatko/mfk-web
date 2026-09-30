@@ -459,7 +459,7 @@ input:focus,select:focus{border-color:var(--green);background:#fff;outline:none}
       <p>En kısa sürede size dönüş yapılacak. Bu arada raporunuzu yazdırıp ekibinizle paylaşabilirsiniz.</p>
     </div>
 
-    <p class="foot">MFK Danışmanlık · Servispro Yazılım Destek Danışmanlık Hizmetleri Ltd. Şti.<br>Verileriniz yalnızca bu değerlendirme ve size dönüş amacıyla işlenir, satılmaz ve pazarlama amacıyla başka kurumlarla paylaşılmaz. Hangi hizmet sağlayıcıların kullanıldığı <a href="/kvkk.html#nabiz" target="_blank">aydınlatma metninde</a> yer alır. Silinmesini istediğinizde talebiniz karşılanır.</p>
+    <p class="foot">MFK Danışmanlık · Servispro Yazılım Destek Danışmanlık Hizmetleri Ltd. Şti.<br>Verileriniz yalnızca bu değerlendirme ve size dönüş amacıyla işlenir, satılmaz ve pazarlama amacıyla başka kurumlarla paylaşılmaz. Kullanılan hizmet sağlayıcılar aydınlatma metnimizde yer alır: mfkdanismanlik.com/kvkk.html · Silinmesini istediğinizde talebiniz karşılanır.</p>
   </div>
 
 </div>
@@ -492,11 +492,21 @@ const TRK=(()=>{
 TRK('view');
 
 const DIMS = [
-  {n:"Stratejik Yönetim",     low:"Strateji yazılı değil ya da sahaya inmemiş. Kaynaklar önceliksiz dağılıyor, departmanlar farklı yöne çalışıyor."},
-  {n:"Süreç ve Standartlar",  low:"İş kişilere bağlı yürüyor. Kilit bir çalışan ayrıldığında bilgi de birlikte gidiyor."},
-  {n:"İnsan ve Performans",   low:"Performans tanımlı kritere değil kanaate dayanıyor. Bu, adalet algısını ve nitelikli çalışanı elde tutmayı doğrudan etkiliyor."},
-  {n:"Veri ve Ölçüm",         low:"Kararlar sezgiyle alınıyor. Ölçüm olmadığı için hangi müdahalenin işe yaradığı da bilinemiyor."},
-  {n:"Yönetişim ve Süreklilik",low:"Karar yetkisi ve devir mekanizması tanımsız. Bu hem büyümenin hem de yönetim değişiminin önündeki temel engel."}
+  {n:"Stratejik Yönetim",
+   low:"Strateji yazılı değil ya da sahaya inmemiş. Kaynaklar önceliksiz dağılıyor, departmanlar farklı yöne çalışıyor.",
+   mid:"Strateji kâğıda dökülmüş ancak pratikte tutarsız uygulanıyor; hedef sahipliği ve üç aylık gözden geçirme mekanizması bir üst kademenin koşuludur."},
+  {n:"Süreç ve Standartlar",
+   low:"İş kişilere bağlı yürüyor. Kilit bir çalışan ayrıldığında bilgi de birlikte gidiyor.",
+   mid:"Süreçler kısmen belgelenmiş, uygulama tutarsız. Prosedür sahipliği ve periyodik uygulama kaydı güçlendirilmelidir."},
+  {n:"İnsan ve Performans",
+   low:"Performans tanımlı kritere değil kanaate dayanıyor. Bu, adalet algısını ve nitelikli çalışanı elde tutmayı doğrudan etkiliyor.",
+   mid:"Performans sistemi var ancak düzenli ve kayıt üreten bir işleve kavuşmamış. Periyodik uygulamayı standartlaştırmak bu kademenin çıkış noktasıdır."},
+  {n:"Veri ve Ölçüm",
+   low:"Kararlar sezgiyle alınıyor. Ölçüm olmadığı için hangi müdahalenin işe yaradığı da bilinemiyor.",
+   mid:"Bazı göstergeler izleniyor, raporlama tutarsız. Gösterge tanımları ve güncelleme sıklığı yazılı standarda bağlanmalıdır."},
+  {n:"Yönetişim ve Süreklilik",
+   low:"Karar yetkisi ve devir mekanizması tanımsız. Bu hem büyümenin hem de yönetim değişiminin önündeki temel engel.",
+   mid:"Yetki ve devir mekanizmaları kısmen belgeli; düzenli güncelleme ve masa başı tatbikatı bir üst kademenin kritik adımıdır."}
 ];
 const SHORT = ["Strateji","Süreç","İnsan","Veri","Yönetişim"];
 
@@ -516,13 +526,54 @@ const QUESTIONS = [
 const SCALE = ["Böyle bir uygulama yok","Var ama kişiye bağlı, yazılı değil","Kısmen yazılı, düzensiz uygulanıyor",
   "Yazılı ve düzenli uygulanıyor","Uygulanıyor ve düzenli denetleniyor","Denetleniyor, verisiyle iyileştiriliyor"];
 
-const NEXT = [
-  "Bu alanda ilk adım, uygulamayı kimin nasıl yaptığını yazıya dökmek. Mükemmel olması gerekmiyor, var olması yeterli.",
-  "Kişiye bağlı yürüyen uygulamayı yazılı hale getirin. Tek sayfalık bir akış bile bu kademeyi atlatır.",
-  "Yazılı olanı düzenli uygulanır hale getirin: sahibini, periyodunu ve tutulacak kaydı tanımlayın.",
-  "Uygulamayı denetime bağlayın. Periyodik gözden geçirme ve uygunsuzluk kaydı, bu kademenin ayırt edici koşuludur.",
-  "Denetim çıktısını veriye dönüştürün ve iyileştirme döngüsü kurun. Ölçüp değiştirdiğinizi kaydedin.",
-  "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+// Boyut × kademe geçiş metinleri [dim_index][level]
+// level 0-4 = bir üst kademeye öneri, level 5 = maksimum
+const NEXT_DIM = [
+  // 0 — Stratejik Yönetim
+  [
+    "İlk adım, yönetimin 'önümüzdeki iki yılda en önemli üç hedef' sorusunu yanıtladığı tek sayfalık bir doküman. Mükemmel olmak zorunda değil, var olması yeterli.",
+    "Aklınızdaki stratejiyi somut ve ölçülebilir hedeflere dönüştürün; her hedefi bir pozisyon veya departmana bağlayın. Rakam olmayan hedef takip edilemez.",
+    "Hedeflerin sahibini ve üç aylık gözden geçirme takvimini yazılı olarak belirleyin. Belge var ama uygulama tutarsızsa bunun nedeni genellikle sahiplik eksikliğidir.",
+    "Stratejik sistemi denetime bağlayın: hedef-sonuç sapmalarının kayıt altına alındığı ve ele alındığı periyodik bir mekanizma kurun.",
+    "Denetim çıktısını strateji güncellemesine dönüştürün. Veri temelli revizyon ve öğrenme döngüsü bu kademenin ayırt edici özelliğidir.",
+    "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+  ],
+  // 1 — Süreç ve Standartlar
+  [
+    "Kritik bir süreci (satış, hizmet teslimi veya tedarik) seçin ve onu kimin hangi adımlarla yürüttüğünü tek sayfaya yazın. Belge kusursuz olmak zorunda değil.",
+    "Sözlü yürüyen süreçleri prosedüre bağlayın. Her prosedür için bir sahip, uygulama periyodu ve kayıt yöntemi tanımlanmalıdır.",
+    "Prosedürleri sabit periyotla uygulayın ve uygulamayı kayıt altına alın. Tutarsızlığın kök nedeni çoğunlukla sahiplik eksikliğidir; her süreç için sorumlu belli olmalı.",
+    "Aksaklık kaydı ve kök neden analizi mekanizması kurun. Uygunsuzluğun tespit edildiği, analiz edildiği ve kapatıldığı döngü bu kademenin sınavıdır.",
+    "Süreç verilerini iyileştirme girdisine dönüştürün. Döngüsel iyileştirme ve veri temelli kapasite kararları bu kademeyi karakterize eder.",
+    "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+  ],
+  // 2 — İnsan ve Performans
+  [
+    "'Bu pozisyonda başarı nasıl ölçülür?' sorusunu her kilit rol için yanıtlayan kısa bir beklenti listesi çıkarın. Beklentiyi bilmeyen çalışandan sonuç beklemek iki taraf için de adil değildir.",
+    "Sözlü beklentileri yazılı görev tanımları ve değerlendirme kriterlerine dönüştürün. Kriter olmadan yapılan değerlendirme yoruma ve itirazlara açık kalır.",
+    "Değerlendirme sistemini düzenli ve kayıt üreten bir sürece bağlayın. Yıllık veya yarı yıllık periyotta tüm kadroya uygulanması ve sonuçların yazılı tutulması bu kademenin koşuludur.",
+    "Değerlendirici kalibrasyonu ve sonuçların kariyer kararlarıyla bağlantısını kurun. Sistemin kör noktalarını tespit eden periyodik denetim mekanizması ekleyin.",
+    "Performans verilerini yetkinlik gelişimi ve işgücü planlamasına bağlayın. İK analitiği ve öngörücü modeller bu kademenin araçlarıdır.",
+    "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+  ],
+  // 3 — Veri ve Ölçüm
+  [
+    "Hâlihazırda baktığınız rakamları listeleyin: satış, tahsilat, maliyet. Bu liste, yönetim gösterge setinin başlangıç noktasıdır; sıfırdan kurmanıza gerek yok.",
+    "Sezgiyle alınan kararları göstergelerle destekleyin. Yönetimin düzenli baktığı beş ile yedi sayısal gösterge belirleyin ve aylık raporlama takvimini kurun.",
+    "Göstergelerin tanımını, hesaplama yöntemini ve güncelleme sıklığını yazılı hale getirin. Aynı rakamın farklı kişilerce farklı hesaplandığı sistem güvenilir değildir.",
+    "Sapma analizi ve müdahale kaydı mekanizması ekleyin. Sapmaların nedenini anlamak ve aksiyona bağlamak, ölçümü raporlamaktan çıkarıp yönetim aracına dönüştürür.",
+    "Veriyi öngörücü analiz ve simülasyona taşıyın. Geriye dönük raporlamadan ileriye dönük karar desteğine geçiş bu kademeyi tanımlar.",
+    "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+  ],
+  // 4 — Yönetişim ve Süreklilik
+  [
+    "'Hangi kararı kim alabilir?' sorusunu yanıtlayan tek sayfalık bir yetki tablosu hazırlayın. Tanımsız yetki sınırları, kararların üst yönetimde birikmesinin başlıca nedenidir.",
+    "Sözlü yetki anlayışını yazılı karar matrisine dönüştürün ve kilit pozisyonlar için vekalet zincirini belgeleyin. İş sürekliliği planı bu belgeyle başlar.",
+    "Karar matrisini organizasyon değişikliklerinde güncelleyin ve yedekleme planını masa başı tatbikatıyla test edin. Test edilmemiş plan kriz anında güvenilir değildir.",
+    "Yönetişim mekanizmalarını kurumsal denetim gündemine alın. Devir ve yedekleme süreçlerinin üst yönetim gündeminde düzenli olarak izlenmesi bu kademeyi karakterize eder.",
+    "Yönetişim yapısını düzenleyici uyum ve kurumsal şeffaflık gereklilikleriyle entegre edin. Bağımsız denetim ve raporlama standartları bu kademenin çıktılarıdır.",
+    "Bu boyut olgun. Kaynağınızı daha zayıf boyutlara kaydırmak daha yüksek getirili olacaktır."
+  ]
 ];
 
 const BANDS = [
@@ -675,7 +726,7 @@ function renderResult(r,bm){
     const bnote = benchDims ? '<div class="bar__note">Sektör ortalaması '+benchDims[i]+'.</div>' : '';
     el.innerHTML='<div class="bar__head"><span class="bar__name">'+d.name+'</span><span class="bar__val" style="color:'+c+'">'+d.score+'</span></div>'+
       '<div class="bar__track"><div class="bar__fill" style="background:'+c+'"></div>'+mark+'</div>'+
-      (d.score<61?'<div class="bar__note">'+d.low+'</div>':bnote);
+      (d.score<41?'<div class="bar__note">'+d.low+'</div>':d.score<61?'<div class="bar__note">'+d.mid+'</div>':bnote);
     box.appendChild(el);
     setTimeout(()=>{const f=el.querySelector('.bar__fill'); if(f) f.style.width=d.score+'%';},120+i*90);
   });
@@ -686,7 +737,7 @@ function renderResult(r,bm){
     : '';
 
   const lad=$('r-ladder'); lad.innerHTML='';
-  r.dims.forEach(d=>{
+  r.dims.forEach((d,i)=>{
     const lv = d.score===null ? null : Math.min(5,Math.round(d.score/20));
     const el=document.createElement('div'); el.className='rung';
     if(lv===null){
@@ -697,7 +748,7 @@ function renderResult(r,bm){
       el.innerHTML='<div class="rung__lv"><div class="rung__cur">'+lv+'</div>'+
         (lv<5?'<div class="rung__arrow">▼</div><div class="rung__next">'+(lv+1)+'</div>':'')+'</div>'+
         '<div class="rung__b"><div class="rung__name">'+d.name+'</div>'+
-        '<div class="rung__txt">'+NEXT[lv]+'</div></div>';
+        '<div class="rung__txt">'+NEXT_DIM[i][lv]+'</div></div>';
     }
     lad.appendChild(el);
   });

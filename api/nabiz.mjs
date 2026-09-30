@@ -120,6 +120,7 @@ Kurallar:
 
 GZFT — her kutuda 2 ya da 3 madde, her madde tek cümle ve en fazla 20 kelime.
 - "guclu" ve "zayif" yalnızca ölçüm sonucundan türesin. Skoru yüksek boyutlar güçlü, düşük boyutlar zayıf.
+- "guclu" maddelerinde yanıt verme davranışını veya katılımcının profilini güçlü yön olarak yazma (ör. "tüm sorulara yanıt verilmiş olması" gibi ifadeler yasak). Güçlü yön yalnızca yüksek puanlı boyuttan çıkar.
 - "firsat" maddeleri ${bench ? 'ortalamanın altında kalan boyutlardan türesin: kapatılabilir açık demektir. Puan farkını maddede belirt.' : 'bir üst olgunluk kademesine geçildiğinde elde edilecek somut kazanımdan türesin.'}
 - "tehdit" maddeleri en zayıf boyutların önümüzdeki 12 ayda doğuracağı somut sonuçtan türesin.
 - Pazar, ekonomi, döviz, rekabet, teknoloji trendi gibi dış çevre yorumu YAPMA. Elinde o veri yok. Yalnızca ölçüm ve kıyaslama verisinden konuş.
@@ -143,7 +144,9 @@ ${(unknown || 0) >= 3 ? `- Bulgulara ayrı bir madde ekle: yanıtlayan kişi ${u
 - Görüşmeye davet: raporun birlikte okunabileceği, önceliklendirmenin birlikte yapılabileceği.
 Hizmet satma, fiyat verme, ısrarcı olma. Sıcak ama ölçülü bir dille yaz. "Memnuniyet duyarız" gibi kalıp nezaket cümleleri kullanma; ne olacağını söyle.
 
-Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı övgü yapma, korku pazarlama, klişe kullanma.`;
+Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı övgü yapma, korku pazarlama, klişe kullanma.
+- Uzun tire (—) kullanma; bunun yerine virgül, noktalı virgül veya yeni cümle kur.
+- "çöküş", "felç", "derin kriz", "alarm", "tehlike" gibi abartılı ifadeler yerine ölçülü danışman dili kullan.`;
 
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
