@@ -227,8 +227,10 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
           html: buildEmail({ name, company, total, band, dims, bench, result })
         })
       });
-      const rrj = await rr.json();
-      console.log('[resend]', rr.status, JSON.stringify(rrj));
+      if (!rr.ok) {
+        const err = await rr.text();
+        console.error('[resend] error', rr.status, err);
+      }
     } catch (e) {
       console.error('resend:', e);
     }
