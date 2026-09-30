@@ -190,7 +190,7 @@ Genel: Türkçe yaz. Danışman ağzıyla, doğrudan ve saygılı. Abartılı ö
         sector || null,
         size || null,
         answers,
-        dims,
+        JSON.stringify(dims),   // JSONB — ham dizi geçilirse pg PostgreSQL dizi biçimine çevirir, bu hata verir
         dims[0]?.score ?? null,
         dims[1]?.score ?? null,
         dims[2]?.score ?? null,
