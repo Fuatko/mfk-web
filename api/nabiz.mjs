@@ -59,6 +59,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Eksik veya hatalı veri.' });
   }
 
+  // Boyut adlarını beyaz listeye karşı doğrula; istemciden gelen serbest metin prompt'a girmemeli.
+  const RESMI_BOYUTLAR = [
+    'Stratejik Yönetim',
+    'Süreç ve Standartlar',
+    'İnsan ve Performans',
+    'Veri ve Ölçüm',
+    'Yönetişim ve Süreklilik',
+  ];
+  if (!Array.isArray(dims) || dims.length !== 5 ||
+      dims.some((d, i) => d.name !== RESMI_BOYUTLAR[i])) {
+    return res.status(400).json({ error: 'Geçersiz boyut adı.' });
+  }
+
   const bench = await getBenchmark(sector);
 
   const measured = dims.filter(d => d.score !== null);
