@@ -69,7 +69,7 @@ body{font-family:'Inter',Calibri,system-ui,sans-serif;background:var(--bg);color
   line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
 .wrap{max-width:680px;margin:0 auto;padding:20px 18px 64px}
 
-.pulsebar{position:sticky;top:0;z-index:20;background:var(--navy);border-radius:var(--radius);
+.pulsebar{position:sticky;top:44px;z-index:20;background:var(--navy);border-radius:var(--radius);
   padding:14px 16px 10px;margin-bottom:22px;box-shadow:0 6px 22px rgba(27,58,92,.18)}
 .pulsebar__top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .pulsebar__label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9FBCD6;font-weight:600}
@@ -249,6 +249,19 @@ input:focus,select:focus{border-color:var(--green);background:#fff;outline:none}
 .seo dt{font-size:14px;font-weight:700;color:var(--navy);margin-top:14px}
 .seo dd{font-size:14px;color:var(--muted);line-height:1.6;margin-top:3px}
 
+/* return bar */
+.rbar{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:44px;
+  background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.rbar__back{display:flex;align-items:center;gap:6px;text-decoration:none;font-size:13.5px;
+  font-weight:500;color:var(--muted);transition:color .15s}
+.rbar__back:hover{color:var(--navy)}
+.rbar__logo{font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--navy);text-decoration:none}
+/* report footer links */
+.rfl{display:flex;justify-content:center;gap:28px;margin-top:20px;flex-wrap:wrap}
+.rfl a{font-size:13.5px;font-weight:500;color:var(--navy);text-decoration:none;
+  border-bottom:1.5px solid var(--line);padding-bottom:2px;transition:border-color .15s}
+.rfl a:hover{border-color:var(--navy)}
+
 .hidden{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:520px){.gzft{grid-template-columns:1fr}}
@@ -270,6 +283,17 @@ input:focus,select:focus{border-color:var(--green);background:#fff;outline:none}
 </style>
 </head>
 <body>
+
+<header class="rbar">
+  <a class="rbar__back" href="/" id="rbar-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Ana sayfa
+  </a>
+  <a class="rbar__logo" href="/">mfkdanışmanlık</a>
+</header>
+
 <div class="wrap">
 
   <div id="printhead"><b>Kurumsal Nabız Teşhisi — Ön Bulgu Raporu</b><span id="printmeta"></span></div>
@@ -460,6 +484,11 @@ input:focus,select:focus{border-color:var(--green);background:#fff;outline:none}
     </div>
 
     <p class="foot">MFK Danışmanlık · Servispro Yazılım Destek Danışmanlık Hizmetleri Ltd. Şti.<br>Verileriniz yalnızca bu değerlendirme ve size dönüş amacıyla işlenir, satılmaz ve pazarlama amacıyla başka kurumlarla paylaşılmaz. Kullanılan hizmet sağlayıcılar aydınlatma metnimizde yer alır: mfkdanismanlik.com/kvkk.html · Silinmesini istediğinizde talebiniz karşılanır.</p>
+
+    <nav class="rfl" aria-label="Diğer sayfalar">
+      <a href="/">← Ana sayfaya dön</a>
+      <a href="/blog.html">Yönetim &amp; danışmanlık blog →</a>
+    </nav>
   </div>
 
 </div>
@@ -871,6 +900,24 @@ function md(t){
 }
 
 drawTrace();
+
+/* Çıkış onayı: değerlendirme başladıysa ve rapor henüz gösterilmediyse sor */
+window.addEventListener('beforeunload', e => {
+  const started = state.answers.some(v => v !== null);
+  const done = !$('s-result').classList.contains('hidden');
+  if (started && !done) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* Return bar "Ana sayfa" linki de onayı tetikler */
+document.getElementById('rbar-back').addEventListener('click', e => {
+  const started = state.answers.some(v => v !== null);
+  const done = !$('s-result').classList.contains('hidden');
+  if (started && !done) {
+    if (!confirm('Değerlendirmenizden çıkmak istediğinizden emin misiniz? Verilen cevaplar kaybolacak.')) {
+      e.preventDefault();
+    }
+  }
+});
 </script>
 </body>
 </html>
