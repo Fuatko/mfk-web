@@ -34,9 +34,7 @@ a{color:inherit}
 
 /* ---------- Header ---------- */
 header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
-.logo{display:flex;align-items:center;text-decoration:none}
-.logo img{height:38px;width:auto;display:block}
+
 
 /* ---------- Hero media ---------- */
 .hero-media{position:relative}
@@ -75,12 +73,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdro
 
 /* ---------- Digital card images ---------- */
 .dig-img{width:100%;height:170px;object-fit:cover;border-radius:12px;margin-bottom:20px;display:block}
-.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
-.nav-links a{text-decoration:none;font-size:.92rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav{display:flex;align-items:center;height:70px}
+.logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+.logo img{height:38px;width:auto;display:block}
+.nav-links{display:flex;align-items:center;gap:22px;list-style:none;margin-left:40px;flex:1}
+.nav-links a{text-decoration:none;font-size:.88rem;font-weight:500;color:var(--muted);transition:color .2s;white-space:nowrap}
 .nav-links a:hover{color:var(--navy)}
-.nav-cta{background:var(--navy);color:#fff !important;padding:10px 20px;border-radius:10px;font-weight:600;transition:background .2s}
-.nav-cta:hover{background:var(--navy-soft)}
-.menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.nav-btns{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.nav-btn-secondary{display:inline-block;text-decoration:none;font-size:.86rem;font-weight:600;color:var(--navy);padding:8px 16px;border:1.5px solid var(--navy);border-radius:10px;white-space:nowrap;transition:all .2s}
+.nav-btn-secondary:hover{background:var(--blue-soft)}
+.nav-btn-primary{display:inline-block;background:var(--navy);color:#fff !important;padding:8px 16px;border-radius:10px;font-size:.86rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s}
+.nav-btn-primary:hover{background:var(--navy-soft)}
+.menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-shrink:0}
 .menu-toggle svg{width:26px;height:26px;stroke:var(--navy);stroke-width:2;fill:none;stroke-linecap:round}
 
 /* ---------- Hero ---------- */
@@ -186,6 +190,16 @@ footer{background:var(--navy);padding:24px 0}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
 /* ---------- Responsive ---------- */
+@media (max-width:1280px){
+  .nav-links{display:none;position:fixed;inset:70px 0 auto 0;background:#fff;flex-direction:column;align-items:stretch;padding:20px 24px;gap:0;border-bottom:1px solid var(--line);z-index:49;margin-left:0}
+  .nav-links.open{display:flex}
+  .nav-links>li>a,.nav-links>li:not(.nav-btns-wrap){border-bottom:1px solid var(--line)}
+  .nav-links>li>a{display:block;padding:12px 0;font-size:.95rem;color:var(--ink)}
+  .nav-btns-wrap{padding-top:16px;border-bottom:none !important}
+  .nav-btns{flex-direction:column;margin-left:0;gap:10px;width:100%}
+  .nav-btn-secondary,.nav-btn-primary{width:100%;text-align:center;padding:13px 0;font-size:.95rem;display:block;box-sizing:border-box}
+  .menu-toggle{display:flex;align-items:center;margin-left:auto}
+}
 @media (max-width:960px){
   .hero-inner{grid-template-columns:1fr;padding:56px 0 64px}
   .approach-grid{grid-template-columns:repeat(2,1fr)}
@@ -199,9 +213,7 @@ footer{background:var(--navy);padding:24px 0}
 }
 @media (max-width:680px){
   .container{padding:0 18px}
-  .nav-links{position:fixed;inset:70px 0 auto 0;background:#fff;flex-direction:column;align-items:flex-start;padding:22px 24px;gap:18px;border-bottom:1px solid var(--line);display:none}
-  .nav-links.open{display:flex}
-  .menu-toggle{display:block}
+
   .services-grid,.why-grid,.digital-grid,.contact-grid,.rail,.approach-grid,.growth-grid{grid-template-columns:1fr}
   .hero-inner{gap:32px;padding:44px 0 52px}
   .hero-media img{height:240px}
@@ -296,11 +308,12 @@ footer{background:var(--navy);padding:24px 0}
       <li><a href="#hizmetler">Hizmetler</a></li>
       <li><a href="#metodoloji">Metodoloji</a></li>
       <li><a href="#egitim">Eğitim &amp; Koçluk</a></li>
-      <li><a href="#neden">Neden Biz</a></li>
-      <li><a href="blog.html">Blog</a></li>
       <li><a href="#dijital">Dijital Çözümler</a></li>
-      <li><a href="/nabiz">Kurumsal Nabız</a></li>
-      <li><a class="nav-cta" href="#iletisim">İletişime Geçin</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li class="nav-btns-wrap"><div class="nav-btns">
+        <a class="nav-btn-secondary" href="/nabiz">Kurumsal Nabız</a>
+        <a class="nav-btn-primary" href="#iletisim">İletişime Geçin</a>
+      </div></li>
     </ul>
   </div>
 </header>
